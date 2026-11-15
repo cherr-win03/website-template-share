@@ -1,0 +1,12 @@
+node_modules/
+.wrangler/
+.dev.vars
+.env
+.env.*
+!.env.example
+public/version.json
+test-results/
+playwright-report/
+qa-output/
+*.log
+.DS_Store

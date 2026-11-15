@@ -1,0 +1,41 @@
+// 웹사이트 템플릿 배포 설정 (Cloudflare Workers + 정적 assets + D1).
+// 새 사이트를 만들 때 바꿀 곳: name, account_id, vars.APP_ORIGIN, d1_databases[].database_name·database_id.
+// 비밀값(SUPABASE_PUBLISHABLE_KEY, SESSION_ENCRYPTION_KEY)은 여기에 쓰지 않는다. `wrangler secret put` 으로만 넣는다.
+// 로컬 개발 값은 .dev.vars(저장소에 넣지 않음, 견본은 .dev.vars.example)가 아래 vars 를 덮어쓴다.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "my-site",
+  // "account_id": "배포할 Cloudflare 계정 ID — deploy:release 가 로그인 계정과 같은지 확인한다",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-10-01",
+  "workers_dev": true,
+  "preview_urls": false,
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": true,
+    "not_found_handling": "404-page",
+    "html_handling": "auto-trailing-slash"
+  },
+  "vars": {
+    "APP_ORIGIN": "https://example.com",
+    "AUTH_ACTIVATION": "disabled",
+    "AUTH_METHODS": "email,google",
+    "PROTECTED_PATHS": "/members/,/api/members/",
+    "SUPABASE_URL": ""
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "my-site-db",
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations"
+    }
+  ],
+  // 인증 요청(POST /api/auth/* 와 소셜 콜백 GET) 빈도 제한: IP당 60초 30회. 바인딩이 없으면(시험) 건너뛴다(fail-open).
+  // namespace_id 는 계정 안에서 이 한도를 구분하는 정수 문자열이다. 같은 계정의 다른 사이트와 겹치지 않게 바꾼다.
+  "ratelimits": [
+    { "name": "AUTH_RATE_LIMITER", "namespace_id": "2001", "simple": { "limit": 30, "period": 60 } }
+  ],
+  "keep_vars": true
+}

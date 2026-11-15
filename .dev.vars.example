@@ -1,0 +1,13 @@
+# 로컬 개발용 값. `npm run setup` 이 이 파일을 .dev.vars 로 복사한다(.dev.vars 는 저장소에 넣지 않는다).
+# 실제 비밀값은 여기에 쓰지 않는다. 운영 비밀값은 `wrangler secret put` 으로만 넣는다.
+APP_ORIGIN=http://127.0.0.1:8790
+# 로그인 기능: disabled(기본, 꺼짐) | enabled. 그 밖의 값은 설정 오류로 503.
+AUTH_ACTIVATION=disabled
+AUTH_METHODS=email,google
+PROTECTED_PATHS=/members/,/api/members/
+# 로컬 가짜 Supabase(scripts/fake-supabase.mjs, 포트 54321)로 로그인 흐름을 시험할 때:
+#   AUTH_ACTIVATION=enabled, SUPABASE_URL=http://127.0.0.1:54321
+SUPABASE_URL=
+SUPABASE_PUBLISHABLE_KEY=local-fake-publishable-key
+# 32바이트를 base64 로 쓴 값. 로컬 전용 가짜 값이다. 운영에서는 새로 만들어 secret 으로 넣는다.
+SESSION_ENCRYPTION_KEY=bG9jYWwtb25seS1mYWtlLWtleS0zMi1ieXRlcyEhISE=

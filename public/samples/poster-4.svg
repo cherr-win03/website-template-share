@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" width="600" height="800" role="img" aria-label="Sample poster">
+<rect width="600" height="800" fill="#7A2113"/>
+<polygon points="60,420 300,120 540,420" fill="#D83C25"/><rect x="120" y="420" width="360" height="40" fill="#7A2113"/><circle cx="300" cy="300" r="46" fill="#FBE1DC"/>
+</svg>

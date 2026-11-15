@@ -1,0 +1,60 @@
+/* ===== 디자인 토큰 (포스터 카드 목록) =====
+   접두어는 --ui- . 이 파일 하나가 색·글자·간격·모서리의 원본이다. 화면 CSS 는 여기 있는 값만 쓴다(새 색 금지).
+
+   ┌─ 새 사이트가 브랜드 색을 바꿀 곳 ───────────────────────────────────────────────┐
+   │ 1) 아래 [바꿀 곳 A] blue 한 줄의 hex 5개(900·700·500·100·50)                     │
+   │ 2) 글꼴을 바꾸려면 [바꿀 곳 B] --ui-font                                         │
+   │ 주색(--ui-brand)·연한 면(--ui-brand-tint)·초점색(--ui-focus)은 blue 값을 따라간다. │
+   │ 새 색을 정하면 docs/DESIGN_RULES.md 의 대비 표(4.5:1)를 다시 계산하고             │
+   │ tests/front-design.test.mjs 를 돌린다.                                           │
+   │ 다른 색으로 시작하려면 <html data-accent="coral"> 처럼 사이트 전체 테마색을 고른다. │
+   └─────────────────────────────────────────────────────────────────────────────────┘ */
+
+/* [바꿀 곳 A] 사이트 기본 테마색 = blue. 900 글자용 · 700 단추·링크 · 500 장식 전용(글자 금지) · 100/50 연한 면 */
+:root,[data-accent=blue]{--ui-accent-900:#0B2E59;--ui-accent-700:#1D4ED8;--ui-accent-500:#3B82F6;--ui-accent-100:#DBE7FB;--ui-accent-50:#EFF4FD}
+
+/* [바꿀 곳 B] 글꼴. Pretendard Variable 은 public/design/fonts/pretendard/ 에 번들돼 있다(각 HTML 이 pretendard.css 를 link) */
+:root{--ui-font:'Pretendard Variable',Pretendard,system-ui,'Malgun Gothic',sans-serif}
+:root:lang(ja){--ui-font:'Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic UI','Yu Gothic',Meiryo,'Noto Sans JP','Pretendard Variable',sans-serif}
+
+/* 주색 = 현재 범위의 테마색. :root 에서 한 번 계산돼 하위로 상속되므로 카드 안(data-accent)에서도 사이트 주색이 유지된다 */
+:root{--ui-brand:var(--ui-accent-700);--ui-brand-tint:var(--ui-accent-50);--ui-focus:var(--ui-brand);--ui-on-primary:#FFFFFF}
+
+/* ===== 색: 면·글자·선 ===== */
+:root{
+  --ui-page:#FFFFFF;--ui-surface:#FFFFFF;--ui-surface-2:#F4F4F4;
+  --ui-ink:#14181C;          /* 본문. 순흑(#000) 금지. 흰 면 17.84:1 */
+  --ui-muted:#5A6570;        /* 보조 글자. 흰 면 5.95:1. 테마 100 면 위 작은 글자에는 쓰지 않는다 */
+  --ui-line:#E6EAEE;         /* 구분선 전용(흰 대비 1.21:1). 눌리는 요소·입력 테두리로 쓰지 않는다 */
+  --ui-field-border:#7A838A; /* 입력·선택 테두리(흰 대비 3.86:1, 비텍스트 3:1 이상) */
+  --ui-ok:#0E6460;--ui-ok-bg:#D9F4F0;
+  --ui-warn:#7A5C00;--ui-warn-bg:#FFF2BF;
+  --ui-danger:#A02030;--ui-danger-bg:#FBE1DC;
+}
+
+/* ===== 글자·간격·모서리·그림자 ===== */
+:root{
+  --ui-fs-1:13px;--ui-fs-2:15px;--ui-fs-3:17px;--ui-fs-4:22px;--ui-fs-5:32px;--ui-fs-6:48px;--ui-fs-num:64px;
+  --ui-lh-title:1.25;--ui-lh-snug:1.4;--ui-lh-body:1.65;
+  --ui-fw-regular:400;--ui-fw-semibold:600;--ui-fw-bold:700;--ui-fw-heavy:800;
+  --ui-sp-1:4px;--ui-sp-2:8px;--ui-sp-3:12px;--ui-sp-4:16px;--ui-sp-5:24px;--ui-sp-6:32px;--ui-sp-7:48px;--ui-sp-8:72px;
+  --ui-r-control:12px;--ui-r-card:20px;--ui-r-full:999px;
+  --ui-shadow-poster:0 8px 24px rgba(20,24,28,.10);--ui-shadow-float:0 -6px 20px rgba(20,24,28,.10);
+  --ui-header-h:64px;--ui-tap:44px;
+  --ui-content-max:1200px;
+  --ui-gutter:max(var(--ui-sp-5),calc((100% - var(--ui-content-max)) / 2)); /* 머리말·꼬리말 좌우 여백(본문 1200 격자에 맞춤) */
+}
+@media (max-width:760px){:root{--ui-gutter:var(--ui-sp-4)}}
+
+/* ===== 항목별 테마색 ===== 요소에 data-accent="coral" 처럼 붙이면 그 안의 --ui-accent-*·--ui-btn-* 가 바뀐다.
+   한 줄 = 한 색(시험이 이 모양을 읽는다). 500 은 장식 전용, 글자로 쓰면 대비가 모자란다. */
+[data-accent=aqua]{--ui-accent-900:#0A4C50;--ui-accent-700:#0F6F75;--ui-accent-500:#1FABB3;--ui-accent-100:#CFF3F1;--ui-accent-50:#E8FBFA}
+[data-accent=lavender]{--ui-accent-900:#2B1E6E;--ui-accent-700:#6B4FD8;--ui-accent-500:#8F77E6;--ui-accent-100:#E6E0FA;--ui-accent-50:#F5F2FD}
+[data-accent=coral]{--ui-accent-900:#7A2113;--ui-accent-700:#B8321E;--ui-accent-500:#D83C25;--ui-accent-100:#FBE1DC;--ui-accent-50:#FDF1EE}
+[data-accent=slate]{--ui-accent-900:#1E293B;--ui-accent-700:#334155;--ui-accent-500:#64748B;--ui-accent-100:#E2E8F0;--ui-accent-50:#F1F5F9}
+/* yellow: 700 은 글자용 어두운 금색, 500 이 채움색. 단추는 노랑 면 + 검정 글자(12.65:1) + 가장자리선 */
+[data-accent=yellow]{--ui-accent-900:#4A3800;--ui-accent-700:#7A5C00;--ui-accent-500:#FFD83D;--ui-accent-100:#FFF2BF;--ui-accent-50:#FFF9E3}
+
+/* 파생값은 data-accent 가 붙은 요소마다 다시 계산한다(사용자 정의 속성은 계산값이 상속되기 때문). 위 색 줄들보다 뒤에 둔다 */
+:root,[data-accent]{--ui-tint:var(--ui-accent-50);--ui-btn-bg:var(--ui-accent-700);--ui-btn-fg:#FFFFFF;--ui-btn-edge:transparent}
+[data-accent=yellow]{--ui-btn-bg:#FFD83D;--ui-btn-fg:#141A1F;--ui-btn-edge:var(--ui-accent-900)}

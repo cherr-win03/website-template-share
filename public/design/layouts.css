@@ -1,0 +1,175 @@
+/* ===== 레이아웃: 포스터 카드 목록 격자 · 상세 · 좁은 화면 분기 =====
+   tokens.css·base.css·components.css 다음에 읽는다. 클래스 기반(ui-). 분기: 1000px(2열) · 760px(휴대폰). */
+
+.ui-main{flex:1 0 auto;width:100%}
+.ui-container{width:100%;max-width:calc(var(--ui-content-max) + 2 * var(--ui-sp-5));margin:0 auto;padding-inline:var(--ui-sp-5)}
+.ui-narrow{max-width:30rem;margin:0 auto;padding:var(--ui-sp-7) var(--ui-sp-4) var(--ui-sp-8)}
+
+/* ---------- 목록 머리: 제목·설명 | 건수 ---------- */
+.ui-list{display:flex;flex-direction:column;padding-bottom:var(--ui-sp-8)}
+.ui-hero{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--ui-sp-5) var(--ui-sp-6);padding:var(--ui-sp-7) 0 var(--ui-sp-5)}
+.ui-hero-text{min-width:0}
+.ui-hero-title{font-size:var(--ui-fs-6);letter-spacing:-.02em;line-height:var(--ui-lh-title)}
+.ui-hero-lead{max-width:42em;margin-top:var(--ui-sp-2);font-size:var(--ui-fs-3);line-height:var(--ui-lh-body);color:var(--ui-muted)}
+.ui-counts{display:flex;flex:none;gap:var(--ui-sp-6)}
+.ui-counts > div{display:flex;flex-direction:column-reverse} /* 읽는 순서는 이름 → 숫자, 보이는 순서는 숫자 위 */
+.ui-counts dt{font-size:var(--ui-fs-2);color:var(--ui-muted)}
+.ui-counts dd{font-size:var(--ui-fs-6);font-weight:var(--ui-fw-heavy);line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.ui-list-tools{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--ui-sp-2) var(--ui-sp-4);margin-bottom:var(--ui-sp-3)}
+.ui-list-count{font-size:var(--ui-fs-1);color:var(--ui-muted)}
+
+/* ---------- 포스터 카드 목록: li 가 subgrid 로 [포스터 / 상태 / 제목 / 정보 / 발] 다섯 줄을 이웃과 맞춘다 ---------- */
+.ui-gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--ui-sp-5);margin:var(--ui-sp-2) 0 0}
+.ui-card{position:relative;display:grid;grid-row:span 5;grid-template-rows:subgrid;row-gap:var(--ui-sp-3);align-content:start;padding:var(--ui-sp-5);border-radius:var(--ui-r-card);background:var(--ui-accent-50);color:var(--ui-ink)}
+.ui-card:hover{box-shadow:inset 0 0 0 2px var(--ui-accent-500)}
+.ui-poster{display:block;width:100%;aspect-ratio:3 / 4;margin-bottom:var(--ui-sp-2);border-radius:var(--ui-r-control);background:var(--ui-accent-100);box-shadow:var(--ui-shadow-poster);object-fit:cover}
+.ui-poster--none{display:flex;align-items:flex-end;padding:var(--ui-sp-4);box-shadow:none;color:var(--ui-accent-900);font-size:var(--ui-fs-4);font-weight:var(--ui-fw-heavy);line-height:var(--ui-lh-title);overflow-wrap:anywhere}
+.ui-card[data-status=closed] .ui-poster{filter:grayscale(1);opacity:.8}
+.ui-card-meta{display:flex;flex-wrap:wrap;align-items:center;gap:var(--ui-sp-2);min-width:0;font-size:var(--ui-fs-1);color:var(--ui-accent-900)}
+.ui-dday{margin-left:auto;font-size:var(--ui-fs-4);font-weight:var(--ui-fw-heavy);line-height:1;letter-spacing:-.01em;color:var(--ui-accent-700);font-variant-numeric:tabular-nums;white-space:nowrap}
+.ui-card-title{font-size:var(--ui-fs-3);line-height:var(--ui-lh-snug);overflow-wrap:anywhere}
+.ui-card-link{color:inherit;text-decoration:none}
+.ui-card-link:hover{color:inherit}
+.ui-card-link::after{content:"";position:absolute;inset:0;border-radius:var(--ui-r-card)} /* 카드 전체가 눌린다 */
+.ui-card-link:focus-visible{outline:0}
+.ui-card-link:focus-visible::after{outline:3px solid var(--ui-focus);outline-offset:4px}
+.ui-card:hover .ui-card-link{text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1px}
+.ui-card-summary{display:none}
+.ui-facts{display:grid;align-content:start;gap:var(--ui-sp-1);font-size:var(--ui-fs-2)}
+.ui-fact{display:grid;grid-template-columns:4.5em minmax(0,1fr);column-gap:var(--ui-sp-3);align-items:baseline}
+.ui-fact-label{font-size:var(--ui-fs-1);color:var(--ui-accent-900)} /* 테마 면 위 작은 글자는 muted 가 아니라 900 */
+.ui-fact-value{min-width:0;font-weight:var(--ui-fw-semibold);overflow-wrap:anywhere}
+.ui-card-foot{display:flex;align-items:center}
+.ui-card-more{font-size:var(--ui-fs-2);font-weight:var(--ui-fw-bold);color:var(--ui-accent-700)}
+
+/* 대표 카드: 가로형(포스터 300 | 정보). JS 가 .ui-card--featured 를 붙인다(4건 이상이면 첫 항목, 1~2건이면 전부) */
+.ui-card--featured{grid-column:1 / -1;grid-row:auto;grid-template-rows:none;grid-template-columns:300px minmax(0,1fr);column-gap:var(--ui-sp-6);align-items:start}
+.ui-card--featured > .ui-poster{grid-column:1;grid-row:1 / span 5;align-self:start;margin:0}
+.ui-card--featured > :not(.ui-poster){grid-column:2}
+.ui-card--featured .ui-card-meta{align-self:stretch}
+.ui-card--featured .ui-dday{order:3;flex-basis:100%;margin:var(--ui-sp-2) 0 0;font-size:var(--ui-fs-num);letter-spacing:-.02em}
+.ui-card--featured .ui-card-title{font-size:var(--ui-fs-5);font-weight:var(--ui-fw-heavy);line-height:var(--ui-lh-title)}
+.ui-card--featured .ui-card-summary{display:block;max-width:40em;font-size:var(--ui-fs-3);line-height:var(--ui-lh-body);text-wrap:pretty}
+.ui-card--featured .ui-fact{grid-template-columns:6em minmax(0,1fr)}
+.ui-card--featured .ui-card-foot{padding-top:var(--ui-sp-2)}
+.ui-card--featured:first-child .ui-card-more{display:inline-flex;align-items:center;min-height:48px;padding:0 var(--ui-sp-5);border-radius:var(--ui-r-full);background:var(--ui-btn-bg);box-shadow:inset 0 0 0 1px var(--ui-btn-edge);color:var(--ui-btn-fg);font-size:var(--ui-fs-3)} /* 화면의 주 단추 하나 */
+
+@media (max-width:1000px){
+  .ui-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ui-hero-title{font-size:var(--ui-fs-5)}
+}
+/* 휴대폰: 1열 가로형 카드(포스터 112 | 글) */
+@media (max-width:760px){
+  .ui-container{padding-inline:var(--ui-sp-4)}
+  .ui-hero{flex-direction:column;align-items:flex-start;padding-top:var(--ui-sp-6)}
+  .ui-counts dd{font-size:var(--ui-fs-5)}
+  .ui-gallery{grid-template-columns:minmax(0,1fr);gap:var(--ui-sp-4)}
+  .ui-card,.ui-card--featured{grid-row:auto;grid-column:auto;grid-template-rows:none;grid-template-columns:112px minmax(0,1fr);column-gap:var(--ui-sp-4);padding:var(--ui-sp-4)}
+  .ui-card > .ui-poster,.ui-card--featured > .ui-poster{grid-column:1;grid-row:1 / span 5;margin:0}
+  .ui-card > :not(.ui-poster),.ui-card--featured > :not(.ui-poster){grid-column:2}
+  .ui-poster--none{padding:var(--ui-sp-2);font-size:var(--ui-fs-2)}
+  .ui-card--featured .ui-card-summary{display:none}
+  .ui-card--featured .ui-dday{order:0;flex-basis:auto;margin:0 0 0 auto;font-size:var(--ui-fs-4)}
+  .ui-card--featured .ui-card-title{font-size:var(--ui-fs-3);font-weight:var(--ui-fw-bold)}
+  .ui-card--featured .ui-fact{grid-template-columns:4.5em minmax(0,1fr)}
+  .ui-card--featured .ui-card-foot{padding-top:0}
+  .ui-card--featured:first-child .ui-card-more{min-height:var(--ui-tap);padding:0 var(--ui-sp-4);font-size:var(--ui-fs-2)}
+}
+
+/* ---------- 상세: 전폭 테마 띠 + 본문 + 따라오는 정보 카드 ---------- */
+.ui-detail{padding-bottom:var(--ui-sp-8);overflow-wrap:anywhere}
+.ui-back{display:inline-flex;align-items:center;min-height:var(--ui-tap);color:var(--ui-ink);font-size:var(--ui-fs-2);font-weight:var(--ui-fw-semibold);text-decoration:none}
+.ui-back:hover{text-decoration:underline;text-underline-offset:4px}
+/* 띠는 화면 끝까지 칠하되 가로 넘침이 없다(그림자 100vmax + clip-path) */
+.ui-detail-hero{display:grid;grid-template-columns:360px minmax(0,1fr);column-gap:var(--ui-sp-7);align-items:start;padding:0 0 var(--ui-sp-6);background:var(--ui-accent-50);box-shadow:0 0 0 100vmax var(--ui-accent-50);clip-path:inset(0 -100vmax)}
+.ui-detail-hero > .ui-back{grid-column:1 / -1;justify-self:start;margin:var(--ui-sp-2) 0}
+.ui-detail-poster{margin:0}
+.ui-detail-poster .ui-poster{margin:0}
+.ui-detail-content{min-width:0;padding-top:var(--ui-sp-2)}
+.ui-detail-meta{display:flex;flex-wrap:wrap;align-items:center;gap:var(--ui-sp-2) var(--ui-sp-3);font-size:var(--ui-fs-1);color:var(--ui-accent-900)}
+.ui-detail-dday{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--ui-sp-1) var(--ui-sp-3);margin-top:var(--ui-sp-3)}
+.ui-detail-dday-num{font-size:var(--ui-fs-num);font-weight:var(--ui-fw-heavy);line-height:1;letter-spacing:-.02em;color:var(--ui-accent-700);font-variant-numeric:tabular-nums;white-space:nowrap}
+.ui-detail-dday-text{font-size:var(--ui-fs-2);font-weight:var(--ui-fw-bold)}
+.ui-detail-title{margin-top:var(--ui-sp-3);font-size:var(--ui-fs-5)}
+.ui-detail-lead{max-width:40em;margin-top:var(--ui-sp-4);font-size:var(--ui-fs-3);line-height:var(--ui-lh-body)}
+.ui-detail .ui-facts{margin-top:var(--ui-sp-4);grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--ui-sp-3)}
+.ui-detail .ui-fact{display:flex;flex-direction:column;gap:var(--ui-sp-1);padding:var(--ui-sp-3) var(--ui-sp-4);border-radius:var(--ui-r-control);background:var(--ui-page)}
+.ui-detail .ui-fact:last-child:nth-child(odd){grid-column:1 / -1}
+.ui-detail .ui-fact-value{font-size:var(--ui-fs-3);font-weight:var(--ui-fw-bold);line-height:var(--ui-lh-snug)}
+.ui-note{margin-top:var(--ui-sp-3);font-size:var(--ui-fs-1);color:var(--ui-accent-900)}
+
+.ui-detail-main{display:grid;grid-template-columns:minmax(0,1fr) 320px;column-gap:var(--ui-sp-8);align-items:start;margin-top:var(--ui-sp-5)}
+.ui-detail-text{grid-column:1;grid-row:1;min-width:0;max-width:40em}
+.ui-detail-text > :first-child{margin-top:0}
+.ui-detail-main--solo{grid-template-columns:minmax(0,1fr)}
+.ui-action-card{grid-column:2;grid-row:1;position:sticky;top:var(--ui-sp-5);padding:var(--ui-sp-4) var(--ui-sp-5) var(--ui-sp-5);border-radius:var(--ui-r-card);background:var(--ui-accent-50)}
+.ui-action-title{font-size:var(--ui-fs-3);font-weight:var(--ui-fw-bold)}
+.ui-action-bar{display:flex;flex-direction:column;align-items:stretch;gap:var(--ui-sp-3);margin-top:var(--ui-sp-3)}
+.ui-when{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--ui-sp-1) var(--ui-sp-2)}
+.ui-when-num{font-size:var(--ui-fs-5);font-weight:var(--ui-fw-heavy);line-height:1;letter-spacing:-.01em;color:var(--ui-accent-700);font-variant-numeric:tabular-nums;white-space:nowrap}
+.ui-when-text{font-size:var(--ui-fs-1);font-weight:var(--ui-fw-bold)}
+.ui-action-note{margin-top:var(--ui-sp-3);font-size:var(--ui-fs-1);line-height:var(--ui-lh-snug);color:var(--ui-accent-900)}
+
+/* 소개글(구조화된 본문) */
+.ui-prose-title{margin:0 0 var(--ui-sp-4);font-size:var(--ui-fs-4)}
+.ui-prose-sub{margin:var(--ui-sp-6) 0 var(--ui-sp-2);font-size:var(--ui-fs-3);line-height:var(--ui-lh-snug)}
+.ui-prose-p{margin:0 0 var(--ui-sp-4);white-space:pre-line;line-height:var(--ui-lh-body)}
+.ui-prose-list{display:grid;gap:var(--ui-sp-2);margin:0 0 var(--ui-sp-4);padding:0 0 0 1.25em;list-style:disc;line-height:var(--ui-lh-body)}
+.ui-prose-list li{padding-left:var(--ui-sp-1)}
+.ui-prose-list li::marker{color:var(--ui-accent-700)}
+
+@media (max-width:1000px){
+  .ui-detail-hero{grid-template-columns:280px minmax(0,1fr);column-gap:var(--ui-sp-6)}
+  .ui-detail-dday-num{font-size:var(--ui-fs-6)}
+  .ui-detail .ui-facts{grid-template-columns:minmax(0,1fr)}
+  .ui-detail-main{grid-template-columns:minmax(0,1fr);row-gap:var(--ui-sp-6)}
+  .ui-action-card{grid-column:1;grid-row:auto;position:static;max-width:40em}
+  .ui-detail-text{grid-row:auto}
+}
+
+/* 휴대폰: 포스터는 120 썸네일, 정보 카드는 화면 아래 고정 바. --ui-bar-reserve 가 꼬리말에 자리를 비운다 */
+@media (max-width:760px){
+  .ui-has-bar{--ui-bar-reserve:5.25rem;scroll-padding-bottom:calc(5.25rem + env(safe-area-inset-bottom,0px))}
+  .ui-detail{padding-bottom:var(--ui-sp-7)}
+  .ui-detail-hero{grid-template-columns:120px minmax(0,1fr);column-gap:var(--ui-sp-4);padding-bottom:var(--ui-sp-6)}
+  .ui-detail-content{display:contents}
+  .ui-detail-poster{grid-column:1;align-self:start}
+  .ui-detail-poster .ui-poster--none{padding:var(--ui-sp-2);font-size:var(--ui-fs-2)}
+  .ui-detail-head{grid-column:2;align-self:center;min-width:0}
+  .ui-detail-dday{margin-top:var(--ui-sp-2)}
+  .ui-detail-dday-num{flex-basis:100%;font-size:var(--ui-fs-6)}
+  .ui-detail-dday-text{font-size:var(--ui-fs-1)}
+  .ui-detail-title,.ui-detail-lead,.ui-detail .ui-facts,.ui-note{grid-column:1 / -1}
+  .ui-detail-title{margin-top:var(--ui-sp-4);font-size:var(--ui-fs-4)}
+  .ui-detail-lead{margin-top:var(--ui-sp-3);font-size:var(--ui-fs-2)}
+  .ui-detail .ui-facts{gap:var(--ui-sp-2);margin-top:var(--ui-sp-4)}
+  .ui-detail .ui-fact{display:grid;grid-template-columns:5.5em minmax(0,1fr);column-gap:var(--ui-sp-3);align-items:baseline}
+  .ui-detail .ui-fact-value{font-size:var(--ui-fs-2)}
+  .ui-detail-main{margin-top:var(--ui-sp-5)}
+  .ui-action-card{max-width:none;padding:0;background:transparent}
+  .ui-action-title{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+  .ui-action-bar{position:fixed;z-index:20;left:0;right:0;bottom:0;flex-direction:row;align-items:center;gap:var(--ui-sp-3);margin:0;padding:var(--ui-sp-3) var(--ui-sp-4) calc(var(--ui-sp-3) + env(safe-area-inset-bottom,0px));background:var(--ui-page);border-top:1px solid var(--ui-line);box-shadow:var(--ui-shadow-float)}
+  .ui-when{flex:0 0 auto;flex-direction:column;align-items:flex-start;gap:2px}
+  .ui-when-num{font-size:var(--ui-fs-4)}
+  .ui-action-bar .ui-btn{flex:1 1 auto;min-width:0;padding-inline:var(--ui-sp-4);font-size:var(--ui-fs-2)}
+  .ui-action-note{margin-top:var(--ui-sp-2)}
+  :is(a,button,[tabindex]){scroll-margin-block:24px calc(5.25rem + env(safe-area-inset-bottom,0px))}
+}
+/* 가로로 눕힌 휴대폰·400% 확대: 고정 바가 화면을 덮으므로 일반 흐름으로 */
+@media (max-width:760px) and (max-height:480px){
+  .ui-has-bar{--ui-bar-reserve:0px}
+  .ui-action-bar{position:static;padding-inline:0;border-top:0;box-shadow:none;background:transparent}
+}
+
+/* ---------- 좁은 한 열 화면: 로그인·회원·404 ---------- */
+.ui-narrow > * + *{margin-top:var(--ui-sp-4)}
+.ui-login-title{font-size:var(--ui-fs-5)}
+.ui-login-lead{color:var(--ui-muted)}
+.ui-login-form{display:grid;gap:var(--ui-sp-4)}
+.ui-login-actions{display:flex;flex-wrap:wrap;gap:var(--ui-sp-3)}
+.ui-social{display:grid;gap:var(--ui-sp-3);margin-top:var(--ui-sp-6)}
+.ui-social-or{text-align:center}
+@media (max-width:760px){
+  .ui-narrow{padding-top:var(--ui-sp-6)}
+  .ui-login-title{font-size:var(--ui-fs-4)}
+}

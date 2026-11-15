@@ -1,0 +1,106 @@
+/* ===== 컴포넌트: 머리말·꼬리말·단추·칩·상태 칩·입력·오류·상태 한 요소 =====
+   클래스 이름은 모두 ui- 로 시작한다. tokens.css·base.css 다음에 읽는다. 새 색 없음(토큰만). 누르는 요소는 44px 이상. */
+
+/* ---------- 머리말: 사이트 이름 · 메뉴(알약) · 언어 · 로그인/로그아웃 ---------- */
+.ui-header{position:relative;display:flex;align-items:center;gap:var(--ui-sp-5);min-height:var(--ui-header-h);padding:0 var(--ui-gutter);background:var(--ui-page);border-bottom:1px solid var(--ui-line)}
+.ui-brand{display:inline-flex;align-items:center;flex:0 0 auto;min-height:var(--ui-tap);color:var(--ui-ink);font-size:var(--ui-fs-3);font-weight:var(--ui-fw-heavy);letter-spacing:.01em;text-decoration:none;white-space:nowrap}
+.ui-brand:hover{color:var(--ui-ink);text-decoration:underline;text-underline-offset:4px}
+.ui-nav{display:flex;flex:1 1 auto;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:var(--ui-sp-1);min-width:0}
+.ui-nav-link{display:inline-flex;align-items:center;justify-content:center;min-height:var(--ui-tap);padding:0 14px;border-radius:var(--ui-r-full);color:var(--ui-muted);font-size:var(--ui-fs-2);font-weight:var(--ui-fw-semibold);line-height:1;text-decoration:none;white-space:nowrap}
+.ui-nav-link:hover{color:var(--ui-ink)}
+.ui-nav-link[aria-current=page]{background:var(--ui-brand-tint);color:var(--ui-ink);font-weight:var(--ui-fw-bold)}
+.ui-header-tools{display:flex;flex:0 0 auto;align-items:center;gap:var(--ui-sp-2)}
+.ui-lang{display:inline-flex;align-items:center}
+.ui-lang .ui-select{min-height:var(--ui-tap);padding:0 var(--ui-sp-3);font-size:var(--ui-fs-1);font-weight:var(--ui-fw-semibold);color:var(--ui-muted);border-radius:var(--ui-r-full)}
+.ui-lang .ui-select:hover{color:var(--ui-ink);background-color:var(--ui-brand-tint)}
+@media (max-width:760px){
+  .ui-header{flex-wrap:wrap;gap:0 var(--ui-sp-2);min-height:0;padding-top:var(--ui-sp-2);padding-bottom:var(--ui-sp-2)}
+  .ui-brand{margin-right:auto}
+  .ui-header-tools{order:1}
+  .ui-nav{order:2;flex:1 0 100%;justify-content:flex-start;margin-top:var(--ui-sp-1)}
+}
+
+/* ---------- 꼬리말: 연한 면 ---------- */
+.ui-footer{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:var(--ui-sp-2) var(--ui-sp-6);padding:var(--ui-sp-6) var(--ui-gutter) calc(var(--ui-sp-6) + var(--ui-bar-reserve,0px) + env(safe-area-inset-bottom,0px));background:var(--ui-brand-tint);color:var(--ui-ink);font-size:var(--ui-fs-2);line-height:1.6}
+.ui-footer-text{font-weight:var(--ui-fw-bold)}
+.ui-footer-links{display:flex;flex-wrap:wrap;gap:var(--ui-sp-1) var(--ui-sp-5)}
+.ui-footer-links a{display:inline-flex;align-items:center;min-height:var(--ui-tap);color:var(--ui-brand);font-weight:var(--ui-fw-semibold)}
+
+/* ---------- 단추: 주(채운 알약, 화면에 하나) · 보조(테두리 알약) · 글자 ---------- */
+.ui-btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--ui-sp-1);min-height:48px;padding:var(--ui-sp-2) var(--ui-sp-5);border:0;border-radius:var(--ui-r-full);background:var(--ui-btn-bg);box-shadow:inset 0 0 0 1px var(--ui-btn-edge);color:var(--ui-btn-fg);font-size:var(--ui-fs-3);font-weight:var(--ui-fw-bold);line-height:var(--ui-lh-snug);text-align:center;text-decoration:none;cursor:pointer}
+.ui-btn:hover{color:var(--ui-btn-fg);text-decoration:underline;text-underline-offset:3px}
+.ui-btn:disabled,.ui-btn[aria-disabled=true]{background:var(--ui-surface-2);box-shadow:none;color:var(--ui-muted);cursor:default;text-decoration:none}
+.ui-btn--secondary{min-height:var(--ui-tap);padding:0 var(--ui-sp-4);background:var(--ui-page);box-shadow:inset 0 0 0 1px var(--ui-accent-700);color:var(--ui-accent-900);font-size:var(--ui-fs-2)}
+.ui-btn--secondary:hover{background:var(--ui-accent-50);color:var(--ui-accent-900)}
+.ui-btn--secondary:disabled,.ui-btn--secondary[aria-disabled=true]{background:var(--ui-page);box-shadow:inset 0 0 0 1px var(--ui-muted);color:var(--ui-muted)}
+.ui-btn--block{display:flex;width:100%}
+.ui-btn-text{display:inline-flex;align-items:center;min-height:var(--ui-tap);padding:0 var(--ui-sp-1);border:0;background:none;color:var(--ui-brand);font-size:var(--ui-fs-2);font-weight:var(--ui-fw-semibold);text-decoration:underline;text-underline-offset:4px;cursor:pointer}
+.ui-btn-text:hover{color:var(--ui-ink)}
+
+/* ---------- 칩(걸러 보기 알약). 눌림은 aria-pressed ---------- */
+.ui-chips{display:flex;flex-wrap:wrap;gap:var(--ui-sp-2)}
+.ui-chip{display:inline-flex;align-items:center;gap:var(--ui-sp-1);min-height:var(--ui-tap);padding:0 var(--ui-sp-4);border:1px solid var(--ui-muted);border-radius:var(--ui-r-full);background:var(--ui-page);color:var(--ui-ink);font-size:var(--ui-fs-2);font-weight:var(--ui-fw-semibold);white-space:nowrap;cursor:pointer}
+.ui-chip:hover{border-color:var(--ui-ink)}
+.ui-chip[aria-pressed=true]{border-color:var(--ui-brand);background:var(--ui-brand);color:var(--ui-on-primary)}
+.ui-chip[aria-pressed=true]::before{content:"\2713";content:"\2713" / ""} /* 색만으로 알리지 않는다: 선택됨 = ✓ */
+
+/* ---------- 상태 칩: open · closing · closed (글자가 항상 같이 있다) ---------- */
+.ui-status{display:inline-flex;align-items:center;max-width:100%;min-height:28px;padding:2px var(--ui-sp-3);border-radius:var(--ui-r-full);background:var(--ui-page);color:var(--ui-ink);font-size:var(--ui-fs-1);font-weight:var(--ui-fw-bold);line-height:var(--ui-lh-snug)}
+.ui-status[data-status=closing]{background:var(--ui-accent-700);color:var(--ui-on-primary)}
+.ui-status[data-status=closed]{background:transparent;box-shadow:inset 0 0 0 1px var(--ui-accent-900);color:var(--ui-accent-900)} /* 채우지 않은 칩 */
+
+/* ---------- 입력·선택 ---------- */
+.ui-field{display:grid;gap:var(--ui-sp-2)}
+.ui-label{font-size:var(--ui-fs-2);font-weight:var(--ui-fw-bold)}
+.ui-hint{font-size:var(--ui-fs-1);color:var(--ui-muted)}
+.ui-input,.ui-select{width:100%;min-height:48px;padding:0 var(--ui-sp-4);border:1px solid var(--ui-field-border);border-radius:var(--ui-r-control);background:var(--ui-surface);color:var(--ui-ink);font-size:var(--ui-fs-3)}
+.ui-select{width:auto;font-size:var(--ui-fs-2);cursor:pointer}
+.ui-input:focus-visible,.ui-select:focus-visible{outline:3px solid var(--ui-focus);outline-offset:2px}
+.ui-input[aria-invalid=true]{border-color:var(--ui-danger);box-shadow:inset 0 0 0 1px var(--ui-danger)}
+.ui-choices{display:grid;gap:var(--ui-sp-1)}
+.ui-choice{display:flex;align-items:center;gap:var(--ui-sp-3);min-height:48px;padding:0 var(--ui-sp-3);border-radius:var(--ui-r-control);cursor:pointer}
+.ui-choice:hover{background:var(--ui-accent-50)}
+.ui-choice input{flex:none;width:22px;height:22px;margin:0;accent-color:var(--ui-accent-700)}
+.ui-choice:has(input:checked){background:var(--ui-accent-100);color:var(--ui-accent-900);font-weight:var(--ui-fw-semibold)}
+
+/* 오류 문구: 앞의 "!" 표시 + 글. 색만으로 알리지 않는다 */
+.ui-error{display:flex;align-items:flex-start;gap:var(--ui-sp-2);color:var(--ui-danger);font-size:var(--ui-fs-2);font-weight:var(--ui-fw-semibold);line-height:var(--ui-lh-snug)}
+.ui-error::before{content:"!";content:"!" / "";flex:none;display:grid;place-items:center;width:20px;height:20px;margin-top:1px;border-radius:50%;background:var(--ui-danger);color:var(--ui-on-primary);font-size:var(--ui-fs-1);font-weight:var(--ui-fw-heavy);line-height:1}
+
+/* 안내 한 덩어리(조용한 면). 톤: 기본·ok·warn·danger — 앞 표시(✓ !)가 색과 함께 뜻을 알린다 */
+.ui-notice{display:flex;align-items:flex-start;gap:var(--ui-sp-3);padding:var(--ui-sp-3) var(--ui-sp-4);border-radius:var(--ui-r-control);background:var(--ui-brand-tint);color:var(--ui-ink);font-size:var(--ui-fs-2);line-height:var(--ui-lh-snug)}
+.ui-notice[data-tone]::before{flex:none;display:grid;place-items:center;width:20px;height:20px;margin-top:1px;border-radius:50%;color:var(--ui-on-primary);font-size:var(--ui-fs-1);font-weight:var(--ui-fw-heavy);line-height:1}
+.ui-notice[data-tone=ok]{background:var(--ui-ok-bg);color:var(--ui-ok)}
+.ui-notice[data-tone=ok]::before{content:"\2713";content:"\2713" / "";background:var(--ui-ok)}
+.ui-notice[data-tone=warn]{background:var(--ui-warn-bg);color:var(--ui-warn)}
+.ui-notice[data-tone=warn]::before{content:"!";content:"!" / "";background:var(--ui-warn)}
+.ui-notice[data-tone=danger]{background:var(--ui-danger-bg);color:var(--ui-danger)}
+.ui-notice[data-tone=danger]::before{content:"!";content:"!" / "";background:var(--ui-danger)}
+
+/* ---------- 상태 한 요소: 불러오는 중 · 비어 있음 · 오류 (data-state) ---------- */
+.ui-state{display:flex;flex-direction:column;align-items:flex-start;gap:var(--ui-sp-3);padding:var(--ui-sp-6) 0;color:var(--ui-muted);font-size:var(--ui-fs-2)}
+.ui-state:focus-visible{outline:3px solid var(--ui-focus);outline-offset:4px}
+.ui-state[data-state=error]{color:var(--ui-danger)}
+.ui-state-bar{display:block;width:min(240px,100%);height:4px;border-radius:var(--ui-r-full);background:var(--ui-accent-100);overflow:hidden}
+.ui-state-bar::after{content:"";display:block;width:40%;height:100%;border-radius:inherit;background:var(--ui-accent-700);animation:ui-slide 1.2s ease-in-out infinite alternate}
+@keyframes ui-slide{from{transform:translateX(0)}to{transform:translateX(150%)}}
+
+/* 가끔 쓰는 카드 면 */
+.ui-panel{padding:var(--ui-sp-5);border-radius:var(--ui-r-card);background:var(--ui-accent-50)}
+
+/* noscript 안내 */
+.ui-noscript{max-width:40em;margin:var(--ui-sp-6) auto;padding:0 var(--ui-sp-4);color:var(--ui-ink);font-size:var(--ui-fs-3)}
+
+/* ---------- 고대비: 면 색이 사라져도 선택·상태가 보이게 ---------- */
+@media (forced-colors:active){
+  .ui-chip{border:1px solid ButtonText}
+  .ui-chip[aria-pressed=true]{border:3px solid Highlight;background:Canvas;color:CanvasText;forced-color-adjust:none}
+  .ui-status{border:1px solid CanvasText}
+  .ui-status[data-status=closing]{border-width:3px}
+  .ui-btn{border:1px solid ButtonText}
+  .ui-nav-link[aria-current=page]{border:2px solid Highlight}
+  .ui-input[aria-invalid=true]{border:3px solid CanvasText}
+  .ui-notice{border:1px solid CanvasText}
+  .ui-state-bar::after{background:Highlight}
+  .ui-error::before,.ui-notice[data-tone]::before{border:1px solid CanvasText}
+}
